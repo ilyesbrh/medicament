@@ -96,7 +96,7 @@ export class HomeComponent implements OnInit {
   }
   filter() {
 
-    if (this.filterObj.value == null) { this.filterObj.setValue(0); }
+    if (this.filterObj.value == null) { this.filterObj.setValue(3); }
     if (this.searchObj.value === '') {
       this.filterData = this.data;
       this.loading = false;
