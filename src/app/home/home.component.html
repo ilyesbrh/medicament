@@ -39,7 +39,7 @@
                 <div class="remboursement" [ngClass]="{'isremb': item.REMBOURSEMENT === 'OUI'}"></div>
                 <mat-card-header>
                     <mat-card-title>{{item.NOM_DE_MARQUE}}</mat-card-title>
-                    <mat-card-subtitle>{{item.DENOMINATION_COMMUNE_INTERNATIONALE | lowercase }}
+                    <mat-card-subtitle class="DCI">{{item.DENOMINATION_COMMUNE_INTERNATIONALE | lowercase }}
                     </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content class="card-content">
@@ -89,7 +89,7 @@
         </div>
     </div>
 </div>
-<mat-menu #rootMenu="matMenu">
+<mat-menu #rootMenu="matMenu" >
     <button mat-menu-item>
         <mat-icon>arrow_upward</mat-icon>ascending
     </button>
@@ -99,6 +99,6 @@
     <mat-divider></mat-divider>
     <button mat-menu-item [matMenuTriggerFor]="subMenu">attribute</button>
 </mat-menu>
-<mat-menu #subMenu="matMenu">
+<mat-menu #subMenu="matMenu" style="height: 150px;">
     <button *ngFor="let item of filterList; let i=index" mat-menu-item (click)="sortBy(i)">{{item}}</button>
 </mat-menu>
