@@ -116,36 +116,46 @@
         width: 98%;
         margin-top: 12px;
         margin: 0 1%;
+
         .medic-card {
             margin: 8px 0px;
-            @media (min-width:1100px) {
-                width: 29%;
+
+            width: 96%;
+
+            .DCI {
+                font-size: 14px;
             }
+
+            @media (min-width:700px) {
+                width: 44%;
+
+                .DCI {
+                    font-size: 13px;
+                }
+            }
+
+            @media (min-width:755px) {
+                width: 45%;
+
+                .DCI {
+                    font-size: 13px;
+                }
+            }
+
             @media (min-width:881px) {
                 width: 29%;
-                .DCI{
+
+                .DCI {
                     font-size: 12px;
                 }
             }
-            @media (min-width:755px) {
-                width: 45%;
-                .DCI{
-                    font-size: 13px;
-                }
+
+            @media (min-width:1100px) {
+                width: 29%;
             }
-            @media (min-width:700px) {
-                width: 44%;
-                .DCI{
-                    font-size: 13px;
-                }
-            }
-            @media (max-width:700px) {
-                width: 96%;
-                .DCI{
-                    font-size: 14px;
-                }
-            }
+
             overflow: hidden;
+
             .remboursement {
                 position: absolute;
                 height: 30px;
@@ -154,7 +164,8 @@
                 right: -26px;
                 transform: rotate(-45deg);
                 background-color: red;
-                &.isremb{
+
+                &.isremb {
                     background-color: green;
                 }
             }
