@@ -4,7 +4,9 @@ import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
 import { debounceTime, map } from 'rxjs/operators';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
-import { trigger, transition, style, animate, stagger, query } from '@angular/animations';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+
 import * as _ from 'lodash';
 
 export const fade = trigger('fade', [
@@ -25,6 +27,7 @@ export class HomeComponent implements OnInit {
   end = 9;
   rest = 0;
   loading = true;
+  mobile = false;
   data = [];
   filterData = [];
   shownData = [];
@@ -35,8 +38,18 @@ export class HomeComponent implements OnInit {
 
 
   constructor(fb: FormBuilder, private http: HttpClient,
-    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer,
+    breakpointObserver: BreakpointObserver) {
 
+    /* media query init */
+    breakpointObserver.observe('(max-width: 400px)').subscribe(result => {
+      if (result.matches) {
+        this.mobile = true;
+      }else{
+        this.mobile = false;
+
+      }
+    });
     /* form init */
     this.form = new FormGroup({
       search: this.searchObj,
@@ -65,6 +78,7 @@ export class HomeComponent implements OnInit {
     );
   }
   ngOnInit() {
+
     this.http.get('https://raw.githubusercontent.com/mahmoudBens/Nomenclature-des-medicaments-en-algerie/master/medicament.json')
       .subscribe((v) => {
         this.data = v[1].data;
