@@ -37,8 +37,6 @@ export class HomeComponent implements OnInit {
 
   constructor(fb: FormBuilder, private http: HttpClient,
     private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-
-    
     /* form init */
     this.form = new FormGroup({
       search: this.searchObj,
@@ -68,7 +66,7 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit() {
 
-    this.http.get('https://raw.githubusercontent.com/mahmoudBens/Nomenclature-des-medicaments-en-algerie/master/medicament.json')
+    this.http.get('/assets/data.json')
       .subscribe((v) => {
         this.data = v[1].data;
         this.filterData = this.data;
