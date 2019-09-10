@@ -6,9 +6,9 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import graphqlHTTP from 'express-graphql';
-import { root, schema } from './server/graphql';
-import Schema from './server/Model';
-import connectDatabase from './server/database';
+import { root, schema } from './graphql';
+import Schema from './Model';
+import connectDatabase from './database';
 
 
 

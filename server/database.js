@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = "mongodb+srv://medica:medicamedica@medicadz-smoh2.mongodb.net/medica?retryWrites=true&w=majority";
+const MONGO_URI = "mongodb+srv://medica:medicamedica@cluster0-aks6m.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
 export default function connectDatabase() {
   return new Promise((resolve, reject) => {
