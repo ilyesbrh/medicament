@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node server.js",
+    "start": "nodemon --exec babel-node server.js",
     "build": "ng build --prod",
     "dev": "nodemon --exec babel-node server.js",
     "test": "ng test",
