@@ -268,3 +268,7 @@
         }
     }
 }
+
+::ng-deep .mat-menu-panel{
+    max-height: 200px!important;
+}

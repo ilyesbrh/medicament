@@ -42,7 +42,7 @@
                     <span class="title">Medicaments <button mat-icon-button color="warn">
                             <mat-icon>info_outline</mat-icon>
                         </button></span>
-                    <p class="description">A total of <span class="number">{{data.length}}</span> medicaments</p>
+                    <p class="description">A total of <span class="number">{{filterData.length}}</span> medicaments</p>
                 </div>
                 <div class="toggle">
                     <button mat-raised-button [matMenuTriggerFor]="rootMenu" class="sortButton"><i
@@ -60,7 +60,7 @@
                 <!--  -->
                 <mat-card *ngFor="let item of filterData | load : end ; trackBy:tracbyfn;let i = index; "
                     [@fade]="{value: '*', params: { delay: (i*300)%2700}}" class="medic-card">
-                    <div class="remboursement" [ngClass]="{'isremb': item.REMBOURSEMENT === 'OUI'}"></div>
+                    <div class="remboursement" [ngClass]="{'isremb': item.REMBOURSEMENT}"></div>
                     <mat-card-header>
                         <mat-card-title>{{item.NOM_DE_MARQUE}}</mat-card-title>
                         <mat-card-subtitle class="DCI">{{item.DENOMINATION_COMMUNE_INTERNATIONALE | lowercase }}
@@ -123,7 +123,7 @@
         <mat-divider></mat-divider>
         <button mat-menu-item [matMenuTriggerFor]="subMenu">attribute</button>
     </mat-menu>
-    <mat-menu #subMenu="matMenu" style="height: 150px;">
+    <mat-menu #subMenu="matMenu" class="submenu" >
         <button *ngFor="let item of filterList; let i=index" mat-menu-item (click)="sortBy(i)">{{item}}</button>
     </mat-menu>
 </mat-sidenav-container>

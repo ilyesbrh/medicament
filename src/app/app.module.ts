@@ -9,13 +9,14 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   MatCardModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSelectModule, MatMenuModule
-  , MatDividerModule, MatInputModule, MatProgressBarModule,MatSidenavModule,MatListModule
+  , MatDividerModule, MatInputModule, MatProgressBarModule, MatSidenavModule, MatListModule
 } from '@angular/material';
 import { HomeComponent } from './home/home.component';
 import { LoadPipe } from './home/load.pipe';
+import { GraphQLModule } from './graphql.module';
 
 const material = [MatCardModule, MatToolbarModule, MatButtonModule, MatIconModule, MatSelectModule, MatMenuModule
-  , MatDividerModule, MatInputModule, MatProgressBarModule,MatSidenavModule,MatListModule];
+  , MatDividerModule, MatInputModule, MatProgressBarModule, MatSidenavModule, MatListModule];
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,9 +30,17 @@ const material = [MatCardModule, MatToolbarModule, MatButtonModule, MatIconModul
     HttpClientModule,
     AppRoutingModule,
     ...material,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    GraphQLModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    if (!localStorage.getItem('fistTime')) {
+      localStorage.setItem('fistTime', 'true');
+      location.href = '/landingPage';
+    }
+  }
+}

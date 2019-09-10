@@ -5,6 +5,8 @@ import { debounceTime, map } from 'rxjs/operators';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
 
 export const fade = trigger('fade', [
@@ -34,9 +36,38 @@ export class HomeComponent implements OnInit {
   searchObj = new FormControl('');
   filterList: Array<string>;
 
+  dataQuery = gql`
+    query{
+      medicaments{
+        ID
+        DRUG_CLASS
+        PHARMACOLOGY_CLASS
+        NUM_ENREGISTREMENT
+        CODE
+        DENOMINATION_COMMUNE_INTERNATIONALE
+        NOM_DE_MARQUE
+        FORME
+        DOSAGE
+        COND
+        LISTE
+        P1
+        P2
+        OBS
+        LABORATOIRES_DETENTEUR_DE_LA_DECISION_DENREGISTREMENT
+        PAYS_DU_LABORATOIRE_DETENTEUR_DE_LA_DECISION_DENREGISTREMENT
+        DATE_DENREGISTREMENT_INITIAL
+        DATE_DENREGISTREMENT_FINAL
+        TYPE
+        STATUT
+        DUREE_DE_STABILITE
+        PRIX_PORTE_SUR_LA_DECISION_DENREGISTREMENT
+        REMBOURSEMENT
+      }
+    }
+  `;
 
-  constructor(fb: FormBuilder, private http: HttpClient,
-    private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer, private apollo: Apollo) {
     /* form init */
     this.form = new FormGroup({
       search: this.searchObj,
@@ -66,9 +97,10 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit() {
 
-    this.http.get('/assets/data.json')
+    this.apollo.watchQuery<any>({ query:this.dataQuery}).valueChanges
       .subscribe((v) => {
-        this.data = v[1].data;
+        console.log(v.data.medicaments);
+        this.data = v.data.medicaments;
         this.filterData = this.data;
         this.filterList = Object.keys(this.data[0]);
         for (let index = 0; index < this.filterList.length; index++) {
