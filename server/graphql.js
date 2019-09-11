@@ -1,7 +1,5 @@
 /*jshint esversion: 6 */
 import { buildSchema } from 'graphql';
-import { gql } from 'apollo-server';
-import Schema from './Model';
 // GraphQL schema
 var schema = buildSchema(`
     type Query {
@@ -35,7 +33,8 @@ var schema = buildSchema(`
 `);
 // Root resolver
 var root = {
-    medicaments: () =>  Schema.getMedics()
+    medicaments: () => global.data
+    
 }
 
 export { schema, root };

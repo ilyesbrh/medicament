@@ -10,12 +10,13 @@ import { root, schema } from './graphql';
 import Schema from './Model';
 import connectDatabase from './database';
 
-
+global.data = [];
 
 (async () => {
 
     try {
         const info = await connectDatabase();
+        global.data = await Schema.getMedics();
         console.log(`#### Mongodb ready at ${info.host}:${info.port}/${info.name}`);
     } catch (error) {
         console.error("#### Unable to connect to database");
@@ -62,3 +63,5 @@ function fetchDataToMongodb() {
     })
     Schema.collection.insert(jsonContent[1].data)
 }
+
+module.exports = data;
