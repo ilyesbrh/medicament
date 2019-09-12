@@ -37,10 +37,5 @@ const material = [MatCardModule, MatToolbarModule, MatButtonModule, MatIconModul
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
-    if (!localStorage.getItem('fistTime')) {
-      localStorage.setItem('fistTime', 'true');
-      location.href = '/landingPage';
-    }
-  }
+  constructor() {}
 }

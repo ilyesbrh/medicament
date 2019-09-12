@@ -413,5 +413,10 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/mdb.min.js"></script>
     <script>new WOW().init();</script>
+    <script>
+      if (!localStorage.getItem('fistTime')) {
+        localStorage.setItem('fistTime', 'true');
+      }
+    </script>
   </body>
 </html>
