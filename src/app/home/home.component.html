@@ -42,7 +42,7 @@
                     <span class="title">Medicaments <button mat-icon-button color="warn">
                             <mat-icon>info_outline</mat-icon>
                         </button></span>
-                    <p class="description">A total of <span class="number">{{filterData.length}}</span> medicaments</p>
+                    <p class="description">A total of <span class="number">{{totalMedics}}</span> medicaments</p>
                 </div>
                 <div class="toggle">
                     <button mat-raised-button [matMenuTriggerFor]="rootMenu" class="sortButton"><i
@@ -53,7 +53,7 @@
                 <div class="separation"></div>
             </ng-container>
             <ng-template #elseTemplate>
-                <mat-progress-bar mode="query" style="width: 100%"></mat-progress-bar>
+                <mat-progress-bar [mode]="type" [value]="progress" style="width: 100%"></mat-progress-bar>
             </ng-template>
 
             <div class="medicaments">
@@ -114,10 +114,10 @@
         </div>
     </div>
     <mat-menu #rootMenu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="reverseSort(true)">
             <mat-icon>arrow_upward</mat-icon>ascending
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="reverseSort(false)">
             <mat-icon>arrow_downward</mat-icon>Descending
         </button>
         <mat-divider></mat-divider>

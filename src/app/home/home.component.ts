@@ -1,7 +1,8 @@
+// tslint:disable: curly
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup, FormBuilder } from '@angular/forms';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, map, delay } from 'rxjs/operators';
 import { MatIconRegistry } from '@angular/material';
 import { DomSanitizer } from '@angular/platform-browser';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -26,7 +27,11 @@ export class HomeComponent implements OnInit {
 
   end = 9;
   rest = 0;
-  loading = true;
+  ascending = false;
+  totalMedics: any;
+  loading = false;
+  type = 'determinate';
+  progress = 0;
   mobile = false;
   data = [];
   filterData = [];
@@ -35,10 +40,10 @@ export class HomeComponent implements OnInit {
   filterObj = new FormControl();
   searchObj = new FormControl('');
   filterList: Array<string>;
-
+  totalQuery = gql`query{totalMedics}`;
   dataQuery = gql`
-    query{
-      medicaments{
+    query($start:Int!,$end:Int!){
+      medicaments(start:$start,end:$end){
         ID
         DRUG_CLASS
         PHARMACOLOGY_CLASS
@@ -67,7 +72,7 @@ export class HomeComponent implements OnInit {
   `;
 
   constructor(private fb: FormBuilder, private http: HttpClient, private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer, private apollo: Apollo) {
+              private domSanitizer: DomSanitizer, private apollo: Apollo) {
     /* form init */
     this.form = new FormGroup({
       search: this.searchObj,
@@ -94,27 +99,50 @@ export class HomeComponent implements OnInit {
       'description',
       this.domSanitizer.bypassSecurityTrustResourceUrl('/assets/description.svg')
     );
+    /* get data length */
+    this.apollo.watchQuery<any>({ query: this.totalQuery }).valueChanges.subscribe(v => this.totalMedics = v.data.totalMedics);
   }
   ngOnInit() {
-
-    this.apollo.watchQuery<any>({ query:this.dataQuery}).valueChanges
-      .subscribe((v) => {
-        console.log(v.data.medicaments);
-        this.data = v.data.medicaments;
-        this.filterData = this.data;
-        this.filterList = Object.keys(this.data[0]);
-        for (let index = 0; index < this.filterList.length; index++) {
-          this.filterList[index] = this.filterList[index].toLocaleLowerCase().replace(new RegExp('_', 'g'), ' ');
-        }
-        this.setLoad(9);
-        this.loading = false;
-      });
+    this.Datafetch(0);
     this.searchObj.valueChanges
-      .pipe(map(v => { this.loading = true; return v; }))
+      .pipe(map(v => { this.loading = true; this.type = 'query'; return v; }))
       .pipe(debounceTime(1700)).subscribe(v => this.filter());
   }
-  filter() {
+  private Datafetch(cpt) {
+    const step = 500;
+    this.loading = true;
+    this.type = 'determinate';
+    this.apollo.watchQuery<any>({ query: this.dataQuery, variables: { start: cpt * step, end: (cpt + 1) * step } }).valueChanges
+      .pipe(delay(150)).subscribe((v) => {
+        if (v.data.medicaments.length > 0) {
+          this.data.push(...v.data.medicaments);
+          this.filterData = this.data;
+          this.Datafetch(cpt + 1);
+        } else {
+          this.type = 'query';
+          setTimeout(() => {
+            this.loading = false;
+          }, 2000);
+        }
+        this.setLoading();
+        if (cpt === 0)
+          this.filterList = Object.keys(this.data[0]).map(val => val.toLocaleLowerCase().replace(new RegExp('_', 'g'), ' '));
 
+        this.setLoad(9);
+      });
+  }
+  setLoading() {
+    /*
+      total ====> 100%
+      data =====> X
+    */
+    let result = (this.data.length * 100) / this.totalMedics;
+    result = ~~(result);
+    this.progress = this.progress > result ? this.progress : result;
+    console.log(this.progress);
+
+  }
+  filter() {
     if (this.filterObj.value == null) { this.filterObj.setValue(3); }
     if (this.searchObj.value === '') {
       this.filterData = this.data;
@@ -125,8 +153,8 @@ export class HomeComponent implements OnInit {
 
     this.filterData = this.data.filter(item => {
       const val = Object.values<any>(item)[this.filterObj.value];
-      if (this.filterObj.value == 0) {
-        return val == this.searchObj.value;
+      if (this.filterObj.value === 0) {
+        return val === this.searchObj.value;
       }
       return !!val && val.toLowerCase().search(new RegExp(this.searchObj.value.toLowerCase())) !== -1;
     });
@@ -143,21 +171,27 @@ export class HomeComponent implements OnInit {
       if (a === b) {
         return 0;
       } else {
-        return a > b ? 1 : -1;
+        if (this.ascending)
+          return a > b ? 1 : -1;
+        else
+          return a < b ? 1 : -1;
       }
     });
-
     this.setLoad(9);
   }
-
+  reverseSort(bool) {
+    if (bool !== this.ascending) {
+      this.ascending = !this.ascending;
+      this.filterData = this.filterData.slice().reverse();
+    }
+  }
   setLoad(val) {
     this.end = val;
-    if (this.filterData.length === 0) { this.rest = 0; }
-    else {
+    if (this.filterData.length === 0)
+      this.rest = 0;
+    else
       this.rest = Math.max(this.filterData.length - this.end, 0);
-      console.log(this.rest);
 
-    }
 
   }
   tracbyfn(index, item) {

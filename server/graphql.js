@@ -1,9 +1,11 @@
 /*jshint esversion: 6 */
 import { buildSchema } from 'graphql';
+import { start } from 'repl';
 // GraphQL schema
 var schema = buildSchema(`
     type Query {
-        medicaments: [medicament]
+        medicaments(start:Int!,end:Int!): [medicament]
+        totalMedics:Int
     }
     type medicament {
         ID: String
@@ -33,8 +35,15 @@ var schema = buildSchema(`
 `);
 // Root resolver
 var root = {
-    medicaments: () => global.data
-    
+    medicaments: (args) => {
+        const { start, end } = args;
+
+        return global.data.slice(start, end);
+    },
+    totalMedics: ()=>{
+        return global.data.length;
+    }
+
 }
 
 export { schema, root };
