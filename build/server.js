@@ -60,6 +60,7 @@ _regenerator.default.mark(function _callee() {
             rootValue: _graphql.root,
             graphiql: true
           }));
+          
           app.get('/landingPage', function (req, res) {
             res.sendFile(_path.default.join(__dirname + '/landingPage/index.html'));
           });
